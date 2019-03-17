@@ -351,13 +351,17 @@ function! s:handle_symbol(server, last_command_id, type, data) abort
 
     let l:list = lsp#ui#vim#utils#symbols_to_loc_list(a:server, a:data)
 
-    call setqflist(l:list)
+    if !has('patch-8.0.0657') || setqflist([], ' ', {'nr': '$', 'items': l:list, 'title': a:type}) == -1
+        call setqflist(l:list)
+    endif
 
     if empty(l:list)
         call lsp#utils#error('No ' . a:type .' found')
     else
         echo 'Retrieved ' . a:type
-        botright copen
+        " TODO nickspoon: - add variable to make this optional
+        call spoons#quickfix#OpenQuickfix()
+        " botright copen
     endif
 endfunction
 
@@ -387,9 +391,13 @@ function! s:handle_location(ctx, server, type, data) abort "ctx = {counter, list
                 echo 'Retrieved ' . a:type
                 redraw
             elseif !a:ctx['in_preview']
-                call setqflist(a:ctx['list'])
+                if !has('patch-8.0.0657') || setqflist([], ' ', {'nr': '$', 'items': a:ctx['list'], 'title': a:type}) == -1
+                    call setqflist(a:ctx['list'])
+                endif
                 echo 'Retrieved ' . a:type
-                botright copen
+                " TODO nickspoon: - add variable to make this optional
+                call spoons#quickfix#OpenQuickfix()
+                " botright copen
             else
                 let l:lines = readfile(fnameescape(l:loc['filename']))
                 if has_key(l:loc,'viewstart') " showing a locationLink

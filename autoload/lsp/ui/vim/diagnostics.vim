@@ -14,6 +14,9 @@ function! lsp#ui#vim#diagnostics#handle_text_document_publish_diagnostics(server
     endif
     let s:diagnostics[l:uri][a:server_name] = a:data
 
+    " Make the diagnostics available outside the script for e.g. statusline
+    let b:lsp_diagnostics = s:get_all_buffer_diagnostics()
+
     call lsp#ui#vim#virtual#set(a:server_name, a:data)
     call lsp#ui#vim#highlights#set(a:server_name, a:data)
     call lsp#ui#vim#diagnostics#textprop#set(a:server_name, a:data)
@@ -65,7 +68,9 @@ function! lsp#ui#vim#diagnostics#document_diagnostics() abort
         call lsp#utils#error('No diagnostics results found')
     else
         echo 'Retrieved diagnostics results'
-        botright lopen
+        " TODO nickspoon: - add variable to make this optional
+        call spoons#quickfix#OpenLoclist()
+        " botright lopen
     endif
 endfunction
 
