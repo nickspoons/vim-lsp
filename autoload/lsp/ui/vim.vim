@@ -74,7 +74,9 @@ function! s:list_location(method, ctx, ...) abort
     let l:servers = filter(lsp#get_whitelisted_servers(), l:capabilities_func)
     let l:command_id = lsp#_new_command()
 
-    call setqflist([])
+    " TODO: Clearing quickfix is not useful for me but may be necessary when
+    " using multiple servers?
+    " call setqflist([])
 
     let l:ctx = extend({ 'counter': len(l:servers), 'list':[], 'last_command_id': l:command_id, 'jump_if_one': 1, 'mods': '', 'in_preview': 0 }, a:ctx)
     if len(l:servers) == 0
@@ -283,7 +285,9 @@ function! lsp#ui#vim#workspace_symbol() abort
     let l:servers = filter(lsp#get_whitelisted_servers(), 'lsp#capabilities#has_workspace_symbol_provider(v:val)')
     let l:command_id = lsp#_new_command()
 
-    call setqflist([])
+    " TODO: Clearing quickfix is not useful for me but may be necessary when
+    " using multiple servers?
+    " call setqflist([])
 
     if len(l:servers) == 0
         call s:not_supported('Retrieving workspace symbols')
@@ -313,7 +317,9 @@ function! lsp#ui#vim#document_symbol() abort
     let l:servers = filter(lsp#get_whitelisted_servers(), 'lsp#capabilities#has_document_symbol_provider(v:val)')
     let l:command_id = lsp#_new_command()
 
-    call setqflist([])
+    " TODO: Clearing quickfix is not useful for me but may be necessary when
+    " using multiple servers?
+    " call setqflist([])
 
     if len(l:servers) == 0
         call s:not_supported('Retrieving symbols')
